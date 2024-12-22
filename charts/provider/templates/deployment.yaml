@@ -24,8 +24,8 @@ spec:
   template:
     metadata:
       annotations:
-        {{- with $.Values.podAnnotations }}
-        {{- toYaml $ | nindent 8 }}
+        {{- if $.Values.podAnnotations }}
+        {{- toYaml $.Values.podAnnotations | nindent 8 }}
         {{- end }}
         {{- if not $chain.existingConfigSecret }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") $ | sha256sum }}
@@ -34,9 +34,9 @@ spec:
         {{- include "provider.selectorLabels" $ | nindent 8 }}
         app.lavanet.io/chain: {{ $chain.name | lower }}
     spec:
-      {{- with $.Values.imagePullSecrets }}
+      {{- if $.Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml $ | nindent 8 }}
+        {{- toYaml $.Values.imagePullSecrets | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "provider.serviceAccountName" $ }}
       securityContext:
@@ -157,17 +157,17 @@ spec:
             optional: false
         - name: data
           emptyDir: {}
-      {{- with $.Values.nodeSelector }}
+      {{- if $.Values.nodeSelector }}
       nodeSelector:
-        {{- toYaml $ | nindent 8 }}
+        {{- toYaml $.Values.nodeSelector | nindent 8 }}
       {{- end }}
-      {{- with $.Values.affinity }}
+      {{- if $.Values.affinity }}
       affinity:
-        {{- toYaml $ | nindent 8 }}
+        {{- toYaml $.Values.affinity | nindent 8 }}
       {{- end }}
-      {{- with $.Values.tolerations }}
+      {{- if $.Values.tolerations }}
       tolerations:
-        {{- toYaml $ | nindent 8 }}
+        {{- toYaml $.Values.tolerations | nindent 8 }}
       {{- end }}
 {{- end }}
 {{- end }}
